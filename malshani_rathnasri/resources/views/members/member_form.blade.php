@@ -9,22 +9,26 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form>
+            <form method="POST" action="{{ route('members.storeAndEdit')}}">
                 @csrf
                 <input type="hidden" name="member_id" value="{{ $member->id ?? '' }}">
                 <div class="mb-3">
-                    <label for="name" class="form-label">First Name</label>
-                    <input type="text" class="form-control" name="first_name" id="first_name" value="{{ $member->first_name ?? '' }}">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <input type="text" class="form-control" name="firstName" id="firstName" value="{{ $member->firstName ?? '' }}">
                 </div>
                 <div class="mb-2">
-                    <label for="name" class="form-label">Last Name <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" name="last_name" id="last_name" value="{{ $member->last_name ?? '' }}" required>
+                    <label for="lastName" class="form-label">Last Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="lastName" id="lastName" value="{{ $member->lastName ?? '' }}" required>
                 </div>
                 <div class="mb-3">
                     <label for="ds_division" class="form-label">DS Division</label>
                     <select name="ds_division_id" id="ds_division" class="form-select">
                         <option value="">Select Division</option>
-                      
+                          @foreach ($divisions as $division)
+                             <option value="{{ $division->id }}" {{ isset($member) && $member->ds_division_id == $division->id ? 'selected' : '' }}>
+                                  {{ $division->name }}
+                              </option>
+                          @endforeach
                     </select>
                 </div>
                 <div class="mb-3">
@@ -35,12 +39,12 @@
                     <label for="dob" class="form-label">Date of Birth</label>
                     <input type="date" class="form-control" name="dob" id="dob" value="{{ $member->dob ?? '' }}">
                 </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Reset</button>
+                  <button type="submit" class="btn btn-primary">{{ isset($member) ? 'Update Member' : 'Add Member' }}</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Reset</button>
-            <button type="submit" class="btn btn-primary">{{ isset($member) ? 'Update Member' : 'Add Member' }}</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
       </div>

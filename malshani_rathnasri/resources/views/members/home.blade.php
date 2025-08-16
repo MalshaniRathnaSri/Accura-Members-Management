@@ -7,7 +7,7 @@
         </div>
         <div class="d-flex justify-content-between mb-3">
             <input type="text" id="search" class="" placeholder="Search by Last Name">
-            <button type="button" class="btn btn-outline-warning">Warning</button>
+            <a href="{{ route('members.index') }}" class="btn btn-outline-warning">Add New Member</a>
         </div>
         <table class="table">
             <thead class="table-dark">
