@@ -20,4 +20,9 @@ class MembersModel extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function division()
+    {
+        return $this->belongsTo(DS_DivisionModel::class, 'ds_division_id');
+    }
 }

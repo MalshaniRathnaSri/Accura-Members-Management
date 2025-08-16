@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MemberController; 
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,9 +15,7 @@ use App\Http\Controllers\MemberController;
 |
 */
 
-Route::get('/', function () {
-    return view('members.home');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/addMembers', [MemberController::class, 'index'])->name('members.index');
 Route::post('/createMembers', [MemberController::class, 'storeAndEdit'])->name('members.storeAndEdit');

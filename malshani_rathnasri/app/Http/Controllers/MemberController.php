@@ -8,10 +8,20 @@ use App\Models\DS_DivisionModel;
 
 class MemberController extends Controller
 {
-    public function index(){
-        $divisions = DS_DivisionModel::all();
-        return view('members.member_form', compact('divisions'));
+    public function index(Request $request)
+    {
+        $member = null;
+
+        if ($request->has('member_id')) {
+            $member = MembersModel::find($request->member_id);
+        }
+
+        $members = MembersModel::with('division')->get(); 
+        $divisions = DS_DivisionModel::all(); 
+
+        return view('members.member_form', compact('members', 'divisions', 'member'));
     }
+
 
     public function storeAndEdit(Request $request){
         $request-> validate([
@@ -31,7 +41,7 @@ class MemberController extends Controller
         if ($request->member_id) {
             $member = MembersModel::findOrFail($request->member_id);
             $member->update([
-                'firstName' => $request->first_name,
+                'firstName' => $request->firstName,
                 'lastName' => $lastName,
                 'ds_division_id' => $request->ds_division_id,
                 'dob' => $request->dob,
@@ -51,13 +61,13 @@ class MemberController extends Controller
             $message = 'Member added successfully.';
         }
 
-        return redirect()->route('members.index')->with('success', $message);
+        return redirect()->route('home')->with('success', $message);
     }
     public function delete($id)
     {
         $member = MembersModel::findOrFail($id);
         $member->delete(); 
 
-        return redirect()->route('members.index')->with('success', 'Member deleted successfully.');
+        return redirect()->route('home')->with('success', 'Member deleted successfully.');
     }
 }

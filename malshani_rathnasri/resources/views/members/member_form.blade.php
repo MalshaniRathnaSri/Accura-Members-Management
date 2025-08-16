@@ -51,6 +51,7 @@
     </div>
 @endsection
 
+{{-- Modal --}}
 @section('scripts')
 <script>
 document.addEventListener("DOMContentLoaded", function () {
