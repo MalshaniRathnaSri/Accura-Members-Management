@@ -11,41 +11,54 @@
             <button type="button" class="btn-close" aria-label="Close" onclick="redirectHome()"></button>
           </div>
           <div class="modal-body">
-            <form method="POST" action="{{ route('members.storeAndEdit')}}">
+            <form method="POST" action="{{ route('members.storeAndEdit')}}" id="memberForm">
                 @csrf
                 <input type="hidden" name="member_id" value="{{ $member->id ?? '' }}">
+
                 <div class="mb-3">
                     <label for="firstName" class="form-label">First Name</label>
                     <input type="text" class="form-control" name="firstName" id="firstName" value="{{ $member->firstName ?? '' }}">
+                    <div class="text-danger small" id="firstNameError"></div>
                 </div>
-                <div class="mb-2">
-                    <label for="lastName" class="form-label">Last Name <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" name="lastName" id="lastName" value="{{ $member->lastName ?? '' }}" required>
+
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" name="lastName" id="lastName" value="{{ $member->lastName ?? '' }}">
+                    <div class="text-danger small" id="lastNameError"></div>
                 </div>
+
                 <div class="mb-3">
                     <label for="ds_division" class="form-label">DS Division</label>
                     <select name="ds_division_id" id="ds_division" class="form-select">
                         <option value="">Select Division</option>
-                          @foreach ($divisions as $division)
-                             <option value="{{ $division->id }}" {{ isset($member) && $member->ds_division_id == $division->id ? 'selected' : '' }}>
-                                  {{ $division->name }}
-                              </option>
-                          @endforeach
+                        @foreach ($divisions as $division)
+                            <option value="{{ $division->id }}" {{ isset($member) && $member->ds_division_id == $division->id ? 'selected' : '' }}>
+                                {{ $division->name }}
+                            </option>
+                        @endforeach
                     </select>
+                    <div class="text-danger small" id="dsDivisionError"></div>
                 </div>
+
                 <div class="mb-3">
                     <label for="summary" class="form-label">Summary</label>
                     <textarea class="form-control" name="summary" id="summary">{{ $member->summary ?? '' }}</textarea>
+                    <div class="text-danger small" id="summaryError"></div>
                 </div>
+
                 <div class="mb-3">
                     <label for="dob" class="form-label">Date of Birth</label>
                     <input type="date" class="form-control" name="dob" id="dob" value="{{ $member->dob ?? '' }}">
+                    <div class="text-danger small" id="dobError"></div>
                 </div>
+
                 <div class="modal-footer">
-                  @if(!isset ($member))
+                  @if(!isset($member))
                     <button type="reset" class="btn btn-success">Reset</button>
                   @endif
-                  <button type="submit" class="btn" style="background-color: #FC9905; border-color: #FC9905; color: #fff;">{{ isset($member) ? 'Update Member' : 'Add Member' }}</button>
+                  <button type="submit" class="btn" style="background-color: #FC9905; border-color: #FC9905; color: #fff;">
+                    {{ isset($member) ? 'Update Member' : 'Add Member' }}
+                  </button>
                   <button type="button" class="btn btn-danger" onclick="redirectHome()">Close</button>
                 </div>
             </form>
@@ -56,7 +69,6 @@
   </div>
 @endsection
 
-{{-- Modal --}}
 @section('scripts')
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -102,20 +114,58 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     draw();
-});
 
-document.addEventListener("DOMContentLoaded", function () {
-    var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {
-        backdrop: 'static', 
-        keyboard: false     
-    });
+    const modalEl = document.getElementById('exampleModal');
+    const myModal = new bootstrap.Modal(modalEl, {backdrop:'static', keyboard:false});
     myModal.show();
+
+    const form = document.getElementById('memberForm');
+    form.addEventListener('submit', function(e){
+        let isValid = true;
+
+        ['firstNameError','lastNameError','dsDivisionError','summaryError','dobError'].forEach(id=>{
+            document.getElementById(id).innerText = '';
+        });
+
+        const firstName = document.getElementById('firstName').value.trim();
+        if(!firstName){ 
+            document.getElementById('firstNameError').innerText = 'First Name is required'; 
+            isValid = false;
+        }
+
+        const lastName = document.getElementById('lastName').value.trim();
+        if(!lastName){ 
+            document.getElementById('lastNameError').innerText = 'Last Name is required'; 
+            isValid = false;
+        }
+
+        const dsDivision = document.getElementById('ds_division').value;
+        if(!dsDivision){ 
+            document.getElementById('dsDivisionError').innerText = 'Please select a DS Division'; 
+            isValid = false;
+        }
+
+        const summary = document.getElementById('summary').value.trim();
+        if(!summary){ 
+            document.getElementById('summaryError').innerText = 'Summary is required'; 
+            isValid = false;
+        }
+
+        const dob = document.getElementById('dob').value;
+        if(!dob){ 
+            document.getElementById('dobError').innerText = 'Date of Birth is required'; 
+            isValid = false;
+        }
+
+        if(!isValid) e.preventDefault();
+    });
 });
 
 function redirectHome() {
-  window.location.href = "{{ route('home') }}"; 
+  window.location.href = "{{ route('home') }}";
 }
 </script>
+
 <style>
   body, html {
     margin: 0;
@@ -136,4 +186,3 @@ function redirectHome() {
   }
 </style>
 @endsection
-

@@ -25,11 +25,11 @@ class MemberController extends Controller
 
     public function storeAndEdit(Request $request){
         $request-> validate([
-            'firstName' => 'nullable|string|max:50',
+            'firstName' => 'required|string|max:50',
             'lastName' => 'required|string|max:50',
-            'ds_division_id' => 'nullable|exists:ds_divisions,id',
-            'dob' => 'nullable|date',
-            'summary' => 'nullable|string',
+            'ds_division_id' => 'required|exists:ds_divisions,id',
+            'dob' => 'required|date',
+            'summary' => 'required|string',
         ]);
 
         $lastName = $request->lastName;

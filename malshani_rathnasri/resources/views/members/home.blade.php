@@ -44,6 +44,7 @@
                             <th scope="col">Last First</th>
                             <th scope="col">Date of Birth</th>
                             <th scope="col">DS Division</th>
+                            <th scope="col">Summary</th>
                             <th scope=""col>Action</th>
                         </tr>
                     </thead>
@@ -54,6 +55,7 @@
                                 <td>{{ $member->lastName}}</td>
                                 <td>{{ $member->dob}}</td>
                                 <td>{{ $member->division->name ?? '-' }}</td>
+                                <td>{{ $member->summary}}</td>
                                 <td>
                                     <a href="{{ route('members.index', ['member_id' => $member->id]) }}" class="btn btn-success">
                                         <i class="bi bi-pencil"></i>
