@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+  <div>
+    <canvas id="particleCanvas"></canvas>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -41,21 +43,67 @@
                 </div>
                 <div class="modal-footer">
                   @if(!isset ($member))
-                    <button type="reset" class="btn btn-secondary">Reset</button>
+                    <button type="reset" class="btn btn-success">Reset</button>
                   @endif
-                  <button type="submit" class="btn btn-primary">{{ isset($member) ? 'Update Member' : 'Add Member' }}</button>
-                  <button type="button" class="btn btn-secondary" onclick="redirectHome()">Close</button>
+                  <button type="submit" class="btn" style="background-color: #FC9905; border-color: #FC9905; color: #fff;">{{ isset($member) ? 'Update Member' : 'Add Member' }}</button>
+                  <button type="button" class="btn btn-danger" onclick="redirectHome()">Close</button>
                 </div>
             </form>
           </div>
         </div>
       </div>
     </div>
+  </div>
 @endsection
 
 {{-- Modal --}}
 @section('scripts')
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const particleCount = 80;
+
+    for(let i = 0; i < particleCount; i++) {
+        particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            radius: Math.random() * 3 + 1,
+            dx: (Math.random() - 0.5) * 1.5,
+            dy: (Math.random() - 0.5) * 1.5
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = '#FC9905';
+            ctx.fill();
+
+            p.x += p.dx;
+            p.y += p.dy;
+
+            if(p.x < 0 || p.x > width) p.dx *= -1;
+            if(p.y < 0 || p.y > height) p.dy *= -1;
+        });
+
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+});
+
 document.addEventListener("DOMContentLoaded", function () {
     var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {
         backdrop: 'static', 
@@ -68,5 +116,24 @@ function redirectHome() {
   window.location.href = "{{ route('home') }}"; 
 }
 </script>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+  }
+
+  #particleCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1; 
+      background:#131312 ; 
+  }
+</style>
 @endsection
 
