@@ -6,7 +6,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">{{ isset($member) ? 'Edit Member' : 'Add New Member' }}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" aria-label="Close" onclick="redirectHome()"></button>
           </div>
           <div class="modal-body">
             <form method="POST" action="{{ route('members.storeAndEdit')}}">
@@ -40,9 +40,11 @@
                     <input type="date" class="form-control" name="dob" id="dob" value="{{ $member->dob ?? '' }}">
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Reset</button>
+                  @if(!isset ($member))
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+                  @endif
                   <button type="submit" class="btn btn-primary">{{ isset($member) ? 'Update Member' : 'Add Member' }}</button>
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-secondary" onclick="redirectHome()">Close</button>
                 </div>
             </form>
           </div>
@@ -61,6 +63,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     myModal.show();
 });
+
+function redirectHome() {
+  window.location.href = "{{ route('home') }}"; 
+}
 </script>
 @endsection
 

@@ -8,9 +8,16 @@ use App\Models\DS_DivisionModel;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $members = MembersModel::with('division')->get(); 
+       $query = MembersModel::with('division');
+
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('lastName', 'like', '%' . $request->search . '%');
+        }
+
+        $members = $query->get();
+
         return view('members.home', compact('members'));
     }
 }

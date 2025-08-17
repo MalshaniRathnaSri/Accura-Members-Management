@@ -21,7 +21,10 @@
             <h1 class="animated-text text-center">Accura Member List</h1>
         </div>
         <div class="d-flex justify-content-between mb-3">
-            <input type="text" id="search" class="" placeholder="Search by Last Name">
+            <form method="GET" action="{{ route('home') }}">
+                <input type="text" name="search" id="search" placeholder="Search by Last Name" value="{{ request('search') }}">
+                <button type="submit">Search</button>
+            </form>
             <a href="{{ route('members.index') }}" class="btn btn-outline-warning">Add New Member</a>
         </div>
         <table class="table">
